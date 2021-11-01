@@ -1,0 +1,44 @@
+#gameName{
+   text-align: center;
+   text-shadow: 2px 2px 3px rgb(255, 27, 27);
+   /* color: green; */
+
+}
+#Arrow, #text-alert{
+   color: red; 
+}
+
+#betBox, #playerBox, #conclusiionBox{
+   display: inline-block; 
+   padding: 30px;
+   background-color:black;
+   box-shadow: 5px 5px 5px rgb(252, 121, 121);
+   margin-left: 30px;
+   margin-right: 30px;
+   margin-top: 30px;
+   color: white;
+}
+
+#addPlayer{
+   display: inline-block;
+   position: relative;
+   /* align-items: center; */
+   /* left: 50px;
+   right: auto; */
+   /* margin: 0px 0px 0px 0px; */
+
+}
+
+.subheader{
+   text-align: center;
+
+}
+
+#dealerBox{
+   text-align: center;
+   background-color: rgb(37, 163, 37);
+   color: white;
+   padding-top: 30px;
+   padding-bottom: 30px;
+}
+

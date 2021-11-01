@@ -1,0 +1,114 @@
+<h1 id="gameName" >Blackjack Game</h1>
+
+<!-- Add player -->
+<div id="addPlayer" *ngIf="!blackjack.GameStarted || blackjack.PlayerInGame.length === 0 || blackjack.CanPlayAgain">
+  
+  <label id="inputform">
+    Name:<br>
+    <input type="text" [(ngModel)]="playerName" placeholder="ex: Mr. a">
+  </label><br>
+
+  <p *ngIf="playerName ==='' && blackjack.PlayerInGame.length != 6 " id="text-alert">
+    !!! Please enter name of player
+  </p>
+
+  <p>
+    <button (click)="addPlayer()" [disabled]="blackjack.PlayerInGame.length === 6 || playerName==='' ">Add player</button>
+  </p>
+</div>
+
+
+<!-- Show player in game -->
+<hr>
+<ul>
+  <h3>Player in game</h3>
+</ul>
+<ul>
+  <li *ngFor="let player of blackjack.PlayerInGame">
+    <p> {{ player.Name }} </p>
+  </li>
+</ul>
+<hr>
+<br>
+<button (click)="blackjack.playGame()" [disabled]="blackjack.PlayerInGame.length === 0 || blackjack.GameStarted">
+  New Game 
+</button>
+<button (click)="blackjack.playGame()" [disabled]="!blackjack.CanPlayAgain || blackjack.PlayerInGame.length === 0 ">
+  Play Again
+</button>
+<button (click)="blackjack.endGame()" [disabled]="">
+  End Game
+</button>
+<br><br>
+<hr>
+
+<!-- Player place bet -->
+<div *ngIf="blackjack.GameStarted && !blackjack.ConfirmBetAll">
+  <ul>
+    <h3 class="subheader">Bet</h3>
+  </ul>
+  <div *ngFor="let player of blackjack.PlayerInGame" id="betBox">
+    <br>
+    <label for="">Player : {{ player.Name}} </label><br>
+    <label for="" >Money : {{ player.Money}} baht</label><br>
+    <label for="" > Place bet : </label><input type="number" [disabled]="player.BetConfirm" [(ngModel)]="player.Bet" >
+    <br><br><br>
+    <label *ngIf="player.BetConfirm" style="color: red;">This player has already placed a bet.</label><br><br>
+    <button (click)="player.placeBet(player.Bet)"
+      [disabled]='player.Bet <1000 || player.Bet > 1000000 || player.BetConfirm || player.Money < player.Bet'>
+      confirm bet
+    </button>
+  </div><br><br>
+  <button (click)="blackjack.checkBetConfirm()" [disabled]="blackjack.ConfirmBetAll">Check confirm bet</button>
+  <hr>
+</div>
+
+
+<!-- Play game each player draw card or stand -->
+<div *ngIf="blackjack.GameStarted && blackjack.ConfirmBetAll">
+  <!-- dealer -->
+  <div id="dealerBox">
+    <h3>Dealer : {{ blackjack.Dealer.Name }}</h3>
+    <P *ngIf="!blackjack.Dealer.OpenHiddenCard">
+      [ {{ blackjack.Dealer.CardOnHand[0].CardSymbol }} {{ blackjack.Dealer.CardOnHand[0].CardNum }} ], [ ?????? ]
+    </P>
+    <div *ngIf="blackjack.Dealer.OpenHiddenCard">
+      <P *ngFor="let card of dealer.CardOnHand">
+        [ {{card.CardSymbol}} {{ card.CardNum }} ]
+      </P>
+      <p>Point : {{ dealer.CardPoint }}</p>
+    </div>
+  </div>
+  <hr>
+  <!-- Player  -->
+  <div *ngFor="let player of blackjack.PlayerInGame" id="playerBox">
+    <h4><span id="Arrow" *ngIf="player.MyTurn && !blackjack.AllPlayerEndTurn"> => </span> Player : {{ player.Name }}</h4>
+    Card on Hand :
+    <P *ngFor="let card of player.CardOnHand">
+      [ {{card.CardSymbol}} {{ card.CardNum }} ]
+    </P>
+    <p>point : {{ player.CardPoint }}</p>
+    <div>
+      <button (click)="playerDrawCard(player)" [disabled]="!player.MyTurn || player.CardPoint >= 21 || (player.CardPoint <= 21 && player.CardOnHand.length === 5)">
+        Draw
+      </button>
+      <button (click)="playerStand()" [disabled]="!player.MyTurn || player.CardPoint >= 21 || (player.CardPoint <= 21 && player.CardOnHand.length === 5)">
+        Stand
+      </button>
+    </div>
+    <hr>
+  </div>
+  <br><br>
+    <hr>
+</div>
+
+<!-- conclusion game  -->
+<div *ngIf="dealer.OpenHiddenCard && blackjack.AllPlayerEndTurn" >
+  <h3 class="subheader">Conclusion</h3>
+  <div *ngFor="let player of blackjack.PlayerInGame" id="conclusiionBox">
+    <p>Player name : {{ player.Name }} </p>
+    <p>Money : {{player.Money}} </p>
+    <br>
+  </div>
+</div>
+<router-outlet></router-outlet>
